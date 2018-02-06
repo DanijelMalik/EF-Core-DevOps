@@ -1,0 +1,7 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <TargetFramework>netcoreapp2.0</TargetFramework>
+    <AssemblyName>EfCore.DevOps.Domain</AssemblyName>
+    <RootNamespace>EfCore.DevOps.Domain</RootNamespace>
+  </PropertyGroup>
+</Project>
