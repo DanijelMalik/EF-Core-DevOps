@@ -28,12 +28,12 @@ function New-EntityFrameworkCoreDatabaseScript {
 
         [Parameter(Mandatory = $false)]
         [switch]
-        $Immmutable
+        $Immutable
     )
 
     $cmd = "migrations script -o `"$OutputPath`""
 
-    if ($Immmutable) {
+    if ($Immutable) {
         $cmd += " -i"
     }
 
