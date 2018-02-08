@@ -81,7 +81,7 @@ function Start-EntityFrameworkCoreOperation {
     )
 
     $PackagesDirectory = Find-NuGetPackagesLocation
-    $efCoreDllPath = [System.IO.Path]::Combine($PackagesDirectory, "Microsoft.EntityFrameworkCore.Tools.DotNet", $Version, "tools", "netcoreapp2.0", "ef.dll")
+    $efCoreDllPath = [System.IO.Path]::Combine($PackagesDirectory, "Microsoft.EntityFrameworkCore.Tools", $Version, "tools", "netcoreapp2.0", "ef.dll")
     $dependenciesFilePath = [System.IO.Path]::ChangeExtension($StartupAssemblyPath, ".deps.json")
 
     $efCoreCommand = "dotnet exec --depsfile `"$dependenciesFilePath`" --additionalprobingpath `"$PackagesDirectory`" `"$efCoreDllPath`" $Command --assembly `"$MigrationsAssemblyPath`" --startup-assembly `"$StartupAssemblyPath`" --verbose"
