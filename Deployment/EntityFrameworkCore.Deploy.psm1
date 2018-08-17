@@ -81,7 +81,14 @@ function Start-EntityFrameworkCoreOperation {
     )
 
     $PackagesDirectory = Find-NuGetPackagesLocation
-    $efCoreDllFilePath = ([System.IO.Path]::Combine($PackagesDirectory, "Microsoft.EntityFrameworkCore.Tools", $Version, "tools", "netcoreapp*", "**", "ef.dll") | Resolve-Path).Path
+    $netcoreAppDirectory = [System.IO.Path]::Combine($PackagesDirectory, "Microsoft.EntityFrameworkCore.Tools", $Version, "tools", "netcoreapp*") | Resolve-Path
+    $efCoreDllFilePath = Get-ChildItem $netcoreAppDirectory -Filter "ef.dll" -Recurse | Select-Object -First 1 -ExpandProperty FullName
+
+    if (!$efCoreDllFilePath)
+    {
+        throw "Could not resolve the path of ef.dll, version $Version"
+    }
+
     $dependenciesFilePath = [System.IO.Path]::ChangeExtension($StartupAssemblyPath, ".deps.json")
     $runtimeConfigFilePath = [System.IO.Path]::ChangeExtension($StartupAssemblyPath, ".runtimeconfig.json")
 
