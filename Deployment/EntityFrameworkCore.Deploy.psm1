@@ -1,5 +1,5 @@
 function Find-NuGetPackagesLocation {
-    $output = & ".\nuget.exe" locals global-packages -list
+    $output = & nuget locals global-packages -list
     $location = ($output -replace "global-packages:").Trim()
 
     Write-Verbose "NuGet Global Packages: $location"
