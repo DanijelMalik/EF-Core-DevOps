@@ -1,5 +1,5 @@
 function Find-NuGetPackagesLocation {
-    $output = & nuget locals global-packages -list
+    $output = & ".\nuget.exe" locals global-packages -list
     $location = ($output -replace "global-packages:").Trim()
 
     Write-Verbose "NuGet Global Packages: $location"
@@ -81,10 +81,11 @@ function Start-EntityFrameworkCoreOperation {
     )
 
     $PackagesDirectory = Find-NuGetPackagesLocation
-    $efCoreDllPath = [System.IO.Path]::Combine($PackagesDirectory, "Microsoft.EntityFrameworkCore.Tools", $Version, "tools", "netcoreapp2.0", "ef.dll")
+    $efCoreDllFilePath = ([System.IO.Path]::Combine($PackagesDirectory, "Microsoft.EntityFrameworkCore.Tools", $Version, "tools", "netcoreapp*", "**", "ef.dll") | Resolve-Path).Path
     $dependenciesFilePath = [System.IO.Path]::ChangeExtension($StartupAssemblyPath, ".deps.json")
+    $runtimeConfigFilePath = [System.IO.Path]::ChangeExtension($StartupAssemblyPath, ".runtimeconfig.json")
 
-    $efCoreCommand = "dotnet exec --depsfile `"$dependenciesFilePath`" --additionalprobingpath `"$PackagesDirectory`" `"$efCoreDllPath`" $Command --assembly `"$MigrationsAssemblyPath`" --startup-assembly `"$StartupAssemblyPath`" --verbose"
+    $efCoreCommand = "dotnet exec --depsfile `"$dependenciesFilePath`" --additionalprobingpath `"$PackagesDirectory`" --runtimeconfig `"$runtimeConfigFilePath`" `"$efCoreDllFilePath`" $Command --assembly `"$MigrationsAssemblyPath`" --startup-assembly `"$StartupAssemblyPath`" --verbose"
 
     Write-Verbose "Entity Framework Core: $efCoreCommand"
     Invoke-Expression -Command $efCoreCommand
